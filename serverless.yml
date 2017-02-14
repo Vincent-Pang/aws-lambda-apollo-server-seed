@@ -152,6 +152,3 @@ functions:
 
 #plugins:
 #  - serverless-webpack
-
-#custom:
-#webpack: ./webpack.config.ts
