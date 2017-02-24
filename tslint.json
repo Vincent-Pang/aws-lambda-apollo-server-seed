@@ -15,7 +15,8 @@
         "trailing-comma": [true, {"multiline": "never", "singleline": "never"}],
         "one-line": [false],
         "ordered-imports": false,
-        "member-ordering": [false]
+        "member-ordering": [false],
+        "max-line-length": [false, 120]
     },
     "jsRules": {
     /*

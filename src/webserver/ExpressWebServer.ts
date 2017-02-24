@@ -17,7 +17,8 @@ export class ExpressWebServer
 
     public constructor(private config: CommonConfig, private schema: ExecutableSchema)
     {
-        this.rawExpress.use(cors());
+        // setup this before other routes
+        this.setupCors(this.rawExpress);
 
         this.setupGraphql(this.rawExpress, schema);
 
@@ -27,6 +28,23 @@ export class ExpressWebServer
     public start(): void
     {
         this.rawExpress.listen(this.config.PORT);
+    }
+
+    private setupCors(express: Express): void
+    {
+        // sync the cors setting with aws api gateway as similar as possible
+        const corsConfig =
+            {
+                origin : '*'
+                , methods : 'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT' // copy default setting of api gateway
+                , preflightContinue : false
+                , optionsSuccessStatus : 200 // default 204, but the default of aws api gateway is 200
+                // copy setting of api gateway
+                , allowedHeaders : 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,_headers,_normalizednames'
+            };
+
+        express.use( cors(corsConfig) );
+        express.options( '*', cors(corsConfig) ); // include before other routes
     }
 
     private setupGraphql(express: Express, schema: ExecutableSchema): void
