@@ -1,12 +1,12 @@
 import {ISchema} from '../ISchema';
 import {Injectable} from 'injection-js';
-import {MockData} from '../MockData';
 import {find} from 'lodash';
+import {AuthorService} from '../../../services/AuthorService';
 
 @Injectable()
 export class PostSchema implements ISchema
 {
-    public constructor(private readonly mockData: MockData)
+    public constructor(private readonly authorService: AuthorService)
     {
     }
 
@@ -24,7 +24,7 @@ export class PostSchema implements ISchema
 
     public getResolverObj(): any
     {
-        const mockAuthors = this.mockData.authors;
+        const mockAuthors = this.authorService.getAuthors();
 
         return {
             Post: {

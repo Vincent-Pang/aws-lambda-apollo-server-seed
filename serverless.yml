@@ -49,9 +49,12 @@ provider:
 
 custom:
   iam:
-    prod: AWS_IAM
-    dev: AWS_IAM
-    devWithoutIam: NONE
+#    prod: AWS_IAM
+#    dev: AWS_IAM
+#    devWithoutIam: NONE
+    prod: true
+    dev: true
+    devWithoutIam: false
   myStage: ${opt:stage, self:provider.stage}
 
 # you can add packaging information here
@@ -72,40 +75,31 @@ functions:
   graphql:
     handler: dist/bundle.handler
     events:
-      - http: ANY {proxy+}
-        #cors: true
-      #- http:
-      #    path: {proxy+}
-      #    method: any
-      #    cors: true
-
+      - http:
+          path: '{proxy+}'
+          method: any
+          useIAMAuth: ${self:custom.iam.${self:custom.myStage}}
+          cors:
+            origins:
+              - '*'
+            methods:
+              - DELETE
+              - GET
+              - HEAD
+              - OPTIONS
+              - PATCH
+              - POST
+              - PUT
+            headers:
+              - 'Content-Type'
+              - 'X-Amz-Date'
+              - 'Authorization'
+              - 'X-Api-Key'
+              - 'X-Amz-Security-Token'
+              - '_headers'
+              - '_normalizednames'
     environment:
       STAGE: ${self:custom.myStage}
-
-#functions:
-#  GraphqlWithoutIam:
-#    name: GraphqlWithoutIam
-#    handler: dist/bundle.handler
-#    events:
-#      #- http: ANY {proxy+}
-#      - http:
-#          path: {proxy+}
-#          method: any
-#          cors: true
-#
-#    environment:
-#      STAGE: ${env:STAGE}
-
-#functions:
-#  GraphqlDevWithoutIam:
-#    handler: dist/bundle.handler
-#    events:
-#      - http:
-#          path: {proxy+}
-#          method: any
-#          cors: true
-#    environment:
-#      env: dev-without-iam
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -150,5 +144,6 @@ functions:
 #       Description: "Description for the output"
 #       Value: "Some output value"
 
-#plugins:
+plugins:
+  - api-gateway-auth-plugin
 #  - serverless-webpack

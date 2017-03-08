@@ -1,12 +1,12 @@
 import {ISchema} from './ISchema';
 import {RequestContext} from '../../webserver/RequestContext';
 import {Injectable} from 'injection-js';
-import {MockData} from './MockData';
+import {PostService} from '../../services/PostService';
 
 @Injectable()
 export class QuerySchema implements ISchema
 {
-    public constructor(private readonly mockData: MockData)
+    public constructor(private readonly postService: PostService)
     {
     }
 
@@ -25,8 +25,8 @@ export class QuerySchema implements ISchema
 
     public getResolverObj(): any
     {
-        const mockPosts = this.mockData.posts;
-        const mockAuthors = this.mockData.authors;
+        const mockPosts = this.postService.getPosts();
+        // const mockAuthors = this.mockData.authors;
 
         return {
             Query: {
@@ -36,7 +36,8 @@ export class QuerySchema implements ISchema
                 }
                 , hello(obj, args, context, info)
                 {
-                    return 'Hello World';
+                    // throw 'sss';
+                    return 'Hello World1234';
                 }
                 , event(obj, args, context, info): string | null
                 {

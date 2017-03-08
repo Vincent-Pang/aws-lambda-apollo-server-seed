@@ -7,12 +7,16 @@
   "main": "./src/handler.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build_deploy_devWithoutIam": "cross-env STAGE=devWithoutIam npm run build_deploy",
-    "build_deploy_dev": "cross-env STAGE=dev npm run build_deploy",
-    "build_deploy_prod": "cross-env STAGE=prod npm run build_deploy",
-    "build_deploy": "npm run build && npm run deploy",
+    "build_deploy_devWithoutIam": "cross-env STAGE=devWithoutIam yarn run build_deploy",
+    "build_deploy_dev": "cross-env STAGE=dev yarn run build_deploy",
+    "build_deploy_prod": "cross-env STAGE=prod yarn run build_deploy",
+    "build_deploy": "yarn run build && yarn run deploy",
     "build": "webpack",
-    "deploy": "serverless deploy --verbose --stage $STAGE"
+    "deploy": "serverless deploy --verbose --stage $STAGE",
+    "remove_devWithoutIam": "cross-env STAGE=devWithoutIam yarn run remove",
+    "remove_dev": "cross-env STAGE=dev yarn run remove",
+    "remove_prod": "cross-env STAGE=prod yarn run remove",
+    "remove": "serverless remove --stage $STAGE"
   },
   "devDependencies": {
     "@types/aws-serverless-express": "0.0.2",
@@ -21,6 +25,8 @@
     "@types/cors": "^2.8.0",
     "@types/lodash": "^4.14.52",
     "@types/node": "^7.0.4",
+    "@types/winston": "^2.2.0",
+    "api-gateway-auth-plugin": "file:./third-party/serverless-plugin/api-gateway-auth-plugin",
     "cross-env": "^3.1.4",
     "graphql-subscriptions": "^0.3.0",
     "ts-loader": "^2.0.0",
@@ -37,8 +43,10 @@
     "graphql": "^0.9.1",
     "graphql-server-express": "^0.6.0",
     "graphql-tools": "^0.10.0",
-    "injection-js": "^1.0.3",
+    "injection-js": "^2.0.0-rc.2",
     "lodash": "^4.17.4",
-    "rxjs": "^5.1.0"
+    "moment": "^2.17.1",
+    "rxjs": "^5.1.0",
+    "winston": "^2.3.1"
   }
 }

@@ -13,7 +13,7 @@ export class ExecutableSchema
     {
         const schemaStrList = schemaArray.schemas.map( (v) => v.getSchemaStr() );
 
-        const mergedResolvers = schemaArray.schemas.reduce( (acc, v) => merge(acc, v.getResolverObj()), {});
+        const mergedResolvers = schemaArray.schemas.reduce( (acc, v) => merge(acc, v.getResolverObj()), {} );
 
         this.executableSchema = makeExecutableSchema({
             typeDefs: schemaStrList,

@@ -3,10 +3,10 @@ import {Context} from 'aws-lambda';
 
 export class RequestContext
 {
-    public readonly awsEvent?: any = null;
-    public readonly awsContext?: Context = null;
+    public readonly awsEvent: any = null;
+    public readonly awsContext: Context | null = null;
 
-    public constructor(public readonly rawExpressRequest: Request)
+    public constructor(public readonly rawExpressRequest?: Request)
     {
         if (rawExpressRequest)
         {
@@ -16,5 +16,11 @@ export class RequestContext
             this.awsEvent = eventStr ? JSON.parse(eventStr) : null;
             this.awsContext = contextStr ? JSON.parse(contextStr) : null;
         }
+    }
+
+    public toString(): string
+    {
+        return `awsEvent = ${this.awsEvent}\n`
+               + `awsContext = ${this.awsContext}`;
     }
 }

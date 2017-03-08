@@ -1,4 +1,4 @@
-import {Injectable} from 'injection-js';
+import {Injectable, Inject} from 'injection-js';
 import {CommonConfig} from '../config/CommonConfig';
 import {ExecutableSchema} from '../graphql/ExecutableSchema';
 import {Express, Request, Response, NextFunction} from 'express-serve-static-core';
@@ -10,12 +10,19 @@ import * as express from 'express';
 import * as cors from 'cors';
 import * as bodyParser from 'body-parser';
 
+import {LoggerInstance} from 'winston';
+import {Logger} from '../util/Logger';
+
 @Injectable()
 export class ExpressWebServer
 {
     public readonly rawExpress: Express = express();
 
-    public constructor(private config: CommonConfig, private schema: ExecutableSchema)
+    /* tslint:disable:align */
+    public constructor(private config: CommonConfig
+                       , private schema: ExecutableSchema
+                       , @Inject(Logger) private logger: LoggerInstance)
+    /* tslint:enable:align */
     {
         // setup this before other routes
         this.setupCors(this.rawExpress);
@@ -27,6 +34,7 @@ export class ExpressWebServer
 
     public start(): void
     {
+        this.logger.debug('start express listening')
         this.rawExpress.listen(this.config.PORT);
     }
 
@@ -52,9 +60,13 @@ export class ExpressWebServer
         this.rawExpress.use('/graphql', bodyParser.json(), graphqlExpress(
             (req?: express.Request, res?: express.Response): GraphQLOptions =>
             {
+                const requestContext = new RequestContext(req);
+
+                this.logger.debug(requestContext.toString());
+
                 return {
                     schema: schema.executableSchema
-                    , context: new RequestContext(req)
+                    , context: requestContext
                 };
             } )
         );

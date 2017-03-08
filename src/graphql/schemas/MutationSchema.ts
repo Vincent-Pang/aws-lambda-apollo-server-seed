@@ -1,12 +1,12 @@
 import {ISchema} from './ISchema';
 import {Injectable} from 'injection-js';
-import {MockData} from './MockData';
 import {find} from 'lodash';
+import {PostService} from '../../services/PostService';
 
 @Injectable()
 export class MutationSchema implements ISchema
 {
-    public constructor(private readonly mockData: MockData)
+    public constructor(private readonly postService: PostService)
     {
     }
 
@@ -21,8 +21,8 @@ export class MutationSchema implements ISchema
 
     public getResolverObj(): any
     {
-        const mockPosts = this.mockData.posts;
-        const mockAuthors = this.mockData.authors;
+        const mockPosts = this.postService.getPosts();
+        // const mockAuthors = this.mockData.authors;
 
         return {
             Mutation: {
