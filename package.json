@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.9.0",
-    "aws-serverless-express": "^2.1.3",
+    "aws-serverless-express": "file:./third-party/aws-serverless-express",
     "body-parser": "^1.16.0",
     "core-js": "^2.4.1",
     "cors": "^2.8.1",

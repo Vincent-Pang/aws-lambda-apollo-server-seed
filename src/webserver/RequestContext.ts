@@ -10,11 +10,21 @@ export class RequestContext
     {
         if (rawExpressRequest)
         {
-            const eventStr: string = rawExpressRequest.header('x-apigateway-event');
-            const contextStr: string = rawExpressRequest.header('x-apigateway-context');
+            /* tslint:disable:no-string-literal */
+            const apiGatewayParams = rawExpressRequest['apiGateway'];
+            /* tslint:enable:no-string-literal */
 
-            this.awsEvent = eventStr ? JSON.parse(eventStr) : null;
-            this.awsContext = contextStr ? JSON.parse(contextStr) : null;
+            if (apiGatewayParams)
+            {
+                this.awsEvent   = apiGatewayParams.event;
+                this.awsContext = apiGatewayParams.context;
+            }
+
+            // const eventStr: string = rawExpressRequest.header('x-apigateway-event');
+            // const contextStr: string = rawExpressRequest.header('x-apigateway-context');
+            //
+            // this.awsEvent = eventStr ? JSON.parse(eventStr) : null;
+            // this.awsContext = contextStr ? JSON.parse(contextStr) : null;
         }
     }
 

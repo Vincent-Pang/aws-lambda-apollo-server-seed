@@ -9,6 +9,7 @@ import {RequestContext} from './RequestContext';
 import * as express from 'express';
 import * as cors from 'cors';
 import * as bodyParser from 'body-parser';
+import * as awsServerlessExpressMiddleware from 'aws-serverless-express/middleware';
 
 import {LoggerInstance} from 'winston';
 import {Logger} from '../util/Logger';
@@ -26,6 +27,8 @@ export class ExpressWebServer
     {
         // setup this before other routes
         this.setupCors(this.rawExpress);
+
+        this.setupAwsMiddleware(this.rawExpress);
 
         this.setupGraphql(this.rawExpress, schema);
 
@@ -53,6 +56,11 @@ export class ExpressWebServer
 
         express.use( cors(corsConfig) );
         express.options( '*', cors(corsConfig) ); // include before other routes
+    }
+
+    private setupAwsMiddleware(express: Express): void
+    {
+        express.use( awsServerlessExpressMiddleware.eventContext() );
     }
 
     private setupGraphql(express: Express, schema: ExecutableSchema): void
